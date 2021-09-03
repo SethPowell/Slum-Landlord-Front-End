@@ -1,7 +1,7 @@
 import React from "react";
 import Cookies from "js-cookie";
 
-import LoginForm from "../forms/login-form";
+import SignupForm from "../forms/signupform";
 
 export default function home(props) {
 	if (Cookies.get("username")) {
@@ -9,7 +9,7 @@ export default function home(props) {
 	}
 
 	return (
-		<div className="home-wrapper">
+		<div className="signup-wrapper">
 			<h2>
 				Welcome
 				<br />
@@ -17,14 +17,12 @@ export default function home(props) {
 				<br />
 				Slum Landlord
 			</h2>
-			<LoginForm
+			<SignupForm
 				changeRoute={props.history.push}
 				handleSetUser={props.handleSetUser}
 			/>
-			<p>Don't have an account?</p>
-			<button onClick={() => props.history.push("/signup")}>
-				Sign Up
-			</button>
+			<p>Already have an account?</p>
+			<button onClick={() => props.history.push("/")}>Log In</button>
 		</div>
 	);
 }

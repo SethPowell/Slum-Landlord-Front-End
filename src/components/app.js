@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 import LoginForm from "./forms/login-form";
 import Home from "./pages/home";
 import Rules from "./pages/rules";
+import SignUp from "./pages/signUp";
 
 export default class App extends Component {
 	constructor() {
@@ -39,7 +40,12 @@ export default class App extends Component {
 					/>
 					<Route
 						path="/signup"
-						component={() => <div>Sign Up</div>}
+						render={(props) => (
+							<SignUp
+								{...props}
+								handleSetUser={this.handleSetUser}
+							/>
+						)}
 					/>
 					<Route path="/rules" component={Rules} />
 					<Route path="/game" component={() => <div>Game</div>} />
