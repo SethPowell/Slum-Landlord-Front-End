@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import Cookies from "js-cookie";
 
+import loading from "../../../static/assets/loadingCoin.gif";
+
 export default class LoginForm extends Component {
 	constructor(props) {
 		super(props);
@@ -8,6 +10,8 @@ export default class LoginForm extends Component {
 		this.state = {
 			username: "",
 			password: "",
+			error: "",
+			loading: false,
 		};
 
 		this.handleChange = this.handleChange.bind(this);
@@ -17,24 +21,50 @@ export default class LoginForm extends Component {
 	handleSubmit(event) {
 		event.preventDefault();
 
-		fetch("http://127.0.0.1:5000/user/verification", {
-			method: "POST",
-			headers: { "content-type": "application/json" },
-			body: JSON.stringify({
-				username: this.state.username,
-				password: this.state.password,
-			}),
-		})
-			.then((response) => response.json())
-			.then((data) => {
-				console.log(data);
-				if (data === "User Verified") {
-					this.props.handleSetUser(this.state.username);
-					Cookies.set("username", this.state.username);
-					this.props.changeRoute("/rules");
-				}
+		if (this.state.username === "" || this.state.password === "") {
+			this.setState({
+				error: "Please fill in each field",
+			});
+		} else {
+			this.setState({
+				loading: true,
+				error: "",
+			});
+
+			fetch("http://127.0.0.1:5000/user/verification", {
+				method: "POST",
+				headers: { "content-type": "application/json" },
+				body: JSON.stringify({
+					username: this.state.username,
+					password: this.state.password,
+				}),
 			})
-			.catch((error) => console.log("error logging in", error));
+				.then((response) => response.json())
+				.then((data) => {
+					console.log(data);
+
+					this.setState({
+						loading: false,
+					});
+
+					if (data === "User Verified") {
+						this.props.handleSetUser(this.state.username);
+						Cookies.set("username", this.state.username);
+						this.props.changeRoute("/rules");
+					} else {
+						this.setState({
+							error: "Invalid Username or Password",
+						});
+					}
+				})
+				.catch((error) => {
+					console.log("Error logging in: ", error);
+					this.setState({
+						loading: false,
+						error: "Seems like there was an error on our end, please try again later",
+					});
+				});
+		}
 	}
 
 	handleChange(event) {
@@ -45,7 +75,7 @@ export default class LoginForm extends Component {
 
 	render() {
 		return (
-			<form className="login-form">
+			<form className="form-wrapper" onSubmit={this.handleSubmit}>
 				<input
 					type="text"
 					placeholder="username"
@@ -59,9 +89,15 @@ export default class LoginForm extends Component {
 					onChange={this.handleChange}
 				/>
 
-				<button type="submit" onClick={this.handleSubmit}>
+				<button type="submit" disabled={this.state.loading}>
 					Log In
 				</button>
+				{this.state.loading ? (
+					<img src={loading} />
+				) : (
+					<div className="spacer" />
+				)}
+				<p>{this.state.error}</p>
 			</form>
 		);
 	}
