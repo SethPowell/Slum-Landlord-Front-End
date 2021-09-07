@@ -69,7 +69,7 @@ export default class LoginForm extends Component {
 
 	handleChange(event) {
 		this.setState({
-			[event.target.placeholder]: event.target.value
+			[event.target.name]: event.target.value
 		});
 	}
 
@@ -78,13 +78,15 @@ export default class LoginForm extends Component {
 			<form className="form-wrapper" onSubmit={this.handleSubmit}>
 				<input
 					type="text"
-					placeholder="username"
+					placeholder="Username"
+					name="username"
 					value={this.state.username}
 					onChange={this.handleChange}
 				/>
 				<input
 					type="password"
-					placeholder="password"
+					placeholder="Password"
+					name="password"
 					value={this.state.password}
 					onChange={this.handleChange}
 				/>

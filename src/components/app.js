@@ -74,12 +74,7 @@ export default class App extends Component {
 								/>
 							)}
 						/>
-						<Route
-							path="/rules"
-							component={() => (
-								<div>{`Username: ${this.state.user.username}`}</div>
-							)}
-						/>
+						<Route path="/rules" component={Rules} />
 						<Route path="/game" component={() => <div>Game</div>} />
 						<Route
 							path="/gameover"
