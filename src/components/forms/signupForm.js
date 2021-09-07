@@ -12,7 +12,7 @@ export default class SignupForm extends Component {
 			password: "",
 			passwordConfirm: "",
 			error: "",
-			loading: false,
+			loading: false
 		};
 
 		this.handleChange = this.handleChange.bind(this);
@@ -28,16 +28,16 @@ export default class SignupForm extends Component {
 			this.state.passwordConfirm === ""
 		) {
 			this.setState({
-				error: "Please fill in each field",
+				error: "Please fill in each field"
 			});
 		} else if (this.state.password !== this.state.passwordConfirm) {
 			this.setState({
-				error: "Passwords do not match",
+				error: "Passwords do not match"
 			});
 		} else {
 			this.setState({
 				loading: true,
-				error: "",
+				error: ""
 			});
 
 			fetch("http://127.0.0.1:5000/user/add", {
@@ -45,18 +45,18 @@ export default class SignupForm extends Component {
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({
 					username: this.state.username,
-					password: this.state.password,
-				}),
+					password: this.state.password
+				})
 			})
 				.then((response) => response.json())
 				.then((data) => {
 					console.log(data);
 
 					this.setState({
-						loading: false,
+						loading: false
 					});
 
-					this.props.handleSetUser(this.state.username);
+					this.props.handleSetUser(data);
 					Cookies.set("username", this.state.username);
 					this.props.changeRoute("/rules");
 				})
@@ -64,7 +64,7 @@ export default class SignupForm extends Component {
 					console.log("Error logging in: ", error);
 					this.setState({
 						loading: false,
-						error: "Seems like there was an error on our end, please try again later",
+						error: "Seems like there was an error on our end, please try again later"
 					});
 				});
 		}
@@ -72,7 +72,7 @@ export default class SignupForm extends Component {
 
 	handleChange(event) {
 		this.setState({
-			[event.target.name]: event.target.value,
+			[event.target.name]: event.target.value
 		});
 	}
 

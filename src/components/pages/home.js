@@ -1,7 +1,7 @@
 import React from "react";
 import Cookies from "js-cookie";
 
-import LoginForm from "../forms/login-form";
+import LoginForm from "../forms/loginForm";
 
 export default function home(props) {
 	if (Cookies.get("username")) {

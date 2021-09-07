@@ -11,7 +11,7 @@ export default class LoginForm extends Component {
 			username: "",
 			password: "",
 			error: "",
-			loading: false,
+			loading: false
 		};
 
 		this.handleChange = this.handleChange.bind(this);
@@ -23,12 +23,12 @@ export default class LoginForm extends Component {
 
 		if (this.state.username === "" || this.state.password === "") {
 			this.setState({
-				error: "Please fill in each field",
+				error: "Please fill in each field"
 			});
 		} else {
 			this.setState({
 				loading: true,
-				error: "",
+				error: ""
 			});
 
 			fetch("http://127.0.0.1:5000/user/verification", {
@@ -36,32 +36,32 @@ export default class LoginForm extends Component {
 				headers: { "content-type": "application/json" },
 				body: JSON.stringify({
 					username: this.state.username,
-					password: this.state.password,
-				}),
+					password: this.state.password
+				})
 			})
 				.then((response) => response.json())
 				.then((data) => {
 					console.log(data);
 
 					this.setState({
-						loading: false,
+						loading: false
 					});
 
-					if (data === "User Verified") {
-						this.props.handleSetUser(this.state.username);
+					if (data === "Unable to verify user credentials") {
+						this.setState({
+							error: "Invalid Username or Password"
+						});
+					} else {
+						this.props.handleSetUser(data);
 						Cookies.set("username", this.state.username);
 						this.props.changeRoute("/rules");
-					} else {
-						this.setState({
-							error: "Invalid Username or Password",
-						});
 					}
 				})
 				.catch((error) => {
 					console.log("Error logging in: ", error);
 					this.setState({
 						loading: false,
-						error: "Seems like there was an error on our end, please try again later",
+						error: "Seems like there was an error on our end, please try again later"
 					});
 				});
 		}
@@ -69,7 +69,7 @@ export default class LoginForm extends Component {
 
 	handleChange(event) {
 		this.setState({
-			[event.target.placeholder]: event.target.value,
+			[event.target.placeholder]: event.target.value
 		});
 	}
 
