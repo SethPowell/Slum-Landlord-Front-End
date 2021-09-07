@@ -1,10 +1,23 @@
 import Cookies from "js-cookie";
 import React from "react";
 
+import resetGame from "../../scripts/resetGame";
+
 export default function rules(props) {
 	if (!Cookies.get("username")) {
 		props.history.push("/");
 	}
+
+	const handleNewGame = () => {
+		const resetData = resetGame(props.user.id);
+
+		if (resetData.error) {
+			props.handleSetError(resetData.error);
+		} else {
+			props.handleSetUser(resetData);
+			props.history.push("/game");
+		}
+	};
 
 	return (
 		<div className="rules-wrapper">
@@ -24,8 +37,11 @@ export default function rules(props) {
 			</p>
 			<div className="buttons-wrapper">
 				<button onClick={() => props.history.push("/game")}>
-					Play
+					{props.user.existing_game ? "Resume Game" : "Play"}
 				</button>
+				{props.user.existing_game ? (
+					<button onClick={handleNewGame}>New Game</button>
+				) : null}
 			</div>
 		</div>
 	);
