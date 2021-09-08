@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Switch, Route } from "react-router-dom";
 import Cookies from "js-cookie";
 
+import Game from "./pages/game";
 import LoginForm from "./forms/loginForm";
 import Home from "./pages/home";
 import Rules from "./pages/rules";
@@ -91,7 +92,16 @@ export default class App extends Component {
 								/>
 							)}
 						/>
-						<Route path="/game" component={() => <div>Game</div>} />
+						<Route
+							path="/game"
+							render={(props) => (
+								<Game
+									{...props}
+									user={this.state.user}
+									handleSetUser={this.handleSetUser}
+								/>
+							)}
+						/>
 						<Route
 							path="/gameover"
 							component={() => <div>Game Over</div>}
