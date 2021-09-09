@@ -1,12 +1,16 @@
 import React, { Component } from "react";
 import { Switch, Route } from "react-router-dom";
 import Cookies from "js-cookie";
+import ReactDOM from "react-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSignOutAlt } from "@fortawesome/free-solid-svg-icons";
 
 import Game from "./pages/game";
 import LoginForm from "./forms/loginForm";
 import Home from "./pages/home";
 import Rules from "./pages/rules";
 import SignUp from "./pages/signUp";
+import GameOver from "./pages/gameover";
 
 export default class App extends Component {
 	constructor() {
@@ -20,6 +24,7 @@ export default class App extends Component {
 
 		this.handleSetUser = this.handleSetUser.bind(this);
 		this.handleSetError = this.handleSetError.bind(this);
+		this.handleLogout = this.handleLogout.bind(this);
 	}
 
 	componentDidMount() {
@@ -55,9 +60,20 @@ export default class App extends Component {
 		this.setState({ error: errorData });
 	}
 
+	handleLogout() {
+		Cookies.remove("username");
+		this.setState({ user: {} });
+	}
+
 	render() {
 		return (
 			<div className="app">
+				{this.state.user.id ? (
+					<FontAwesomeIcon
+						icon={faSignOutAlt}
+						onClick={this.handleLogout}
+					/>
+				) : null}
 				{this.state.loading ? (
 					<h1>Loading...</h1>
 				) : (
@@ -104,7 +120,14 @@ export default class App extends Component {
 						/>
 						<Route
 							path="/gameover"
-							component={() => <div>Game Over</div>}
+							render={(props) => (
+								<GameOver
+									{...props}
+									user={this.state.user}
+									handleSetUser={this.handleSetUser}
+									handleSetError={this.handleSetError}
+								/>
+							)}
 						/>
 					</Switch>
 				)}

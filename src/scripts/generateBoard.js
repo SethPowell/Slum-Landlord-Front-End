@@ -2,6 +2,7 @@ import readBoard from "./readBoard";
 
 export default function generateBoard(user) {
 	const boardData = [];
+	console.log("from generate board: ", user);
 
 	user.tokens.forEach((token) => boardData.push(token.name));
 

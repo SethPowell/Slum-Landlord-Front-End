@@ -4,6 +4,12 @@ import loading from "../../../static/assets/loadingCoin.gif";
 import generateBoard from "../../scripts/generateBoard";
 import readBoard from "../../scripts/readBoard";
 
+import bee from "../../../static/assets/images/bee.png";
+import cat from "../../../static/assets/images/cat.jpg";
+import coin from "../../../static/assets/images/coin.jpg";
+import dog from "../../../static/assets/images/dog.png";
+import flower from "../../../static/assets/images/flower.png";
+
 const tokens = ["Cat", "Dog", "Flower", "Bee", "Coin"];
 
 export default class Game extends Component {
@@ -28,9 +34,9 @@ export default class Game extends Component {
 
 	handleTokenSelect(event) {
 		this.setState({
-			selectedTokenName: event.target.innerHTML,
+			selectedTokenName: event.target.parentElement.attributes.name.value,
 			selectedToken: true,
-			selectedTokenKey: event.target.attributes.value.value
+			selectedTokenKey: event.target.parentElement.attributes.value.value
 		});
 	}
 
@@ -64,26 +70,30 @@ export default class Game extends Component {
 								data.money -= this.state.rentDue;
 								this.setState({
 									spinsLeft: 5,
-									rentDue: this.state.rentDue + 25
+									rentDue: this.state.rentDue + 25,
+									boardData: boardData.board,
+									tokensList: this.calculateTokensList(),
+									selectedToken: false,
+									selectedTokenKey: null,
+									selectedTokenName: "",
+									loading: false
 								});
 							} else {
 								this.props.history.push("/gameover");
 							}
 						} else {
 							this.setState({
-								spinsLeft: this.state.spinsLeft - 1
+								spinsLeft: this.state.spinsLeft - 1,
+								boardData: boardData.board,
+								tokensList: this.calculateTokensList(),
+								selectedToken: false,
+								selectedTokenKey: null,
+								selectedTokenName: "",
+								loading: false
 							});
 						}
 
 						this.props.handleSetUser(data);
-						this.setState({
-							boardData: boardData.board,
-							tokensList: this.calculateTokensList(),
-							selectedToken: false,
-							selectedTokenKey: null,
-							selectedTokenName: "",
-							loading: false
-						});
 					})
 					.catch((error) => {
 						console.log("Error updating user: ", error);
@@ -114,6 +124,23 @@ export default class Game extends Component {
 		return randomTokens;
 	}
 
+	rednerSquare(square) {
+		switch (square) {
+			case "Coin":
+				return <img src={coin} />;
+			case "Cat":
+				return <img src={cat} />;
+			case "Dog":
+				return <img src={dog} />;
+			case "Bee":
+				return <img src={bee} />;
+			case "Flower":
+				return <img src={flower} />;
+			default:
+				return <div></div>;
+		}
+	}
+
 	render() {
 		return (
 			<div className="game-wrapper">
@@ -121,7 +148,7 @@ export default class Game extends Component {
 					<div className="grid-wrapper">
 						{this.state.boardData.map((square, index) => (
 							<div className="square" key={index}>
-								{square}
+								{this.rednerSquare(square)}
 							</div>
 						))}
 					</div>
@@ -131,6 +158,7 @@ export default class Game extends Component {
 						<div className="tokens-wrapper">
 							{this.state.tokensList.map((token, index) => (
 								<div
+									name={token}
 									value={index}
 									key={index}
 									className={`token ${
@@ -140,7 +168,7 @@ export default class Game extends Component {
 									}`}
 									onClick={this.handleTokenSelect}
 								>
-									{token}
+									{this.rednerSquare(token)}
 								</div>
 							))}
 						</div>
